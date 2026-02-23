@@ -4,8 +4,10 @@ ARTIFACT_ID=k8s-auth-registration-crd
 APPEND_CRD_SUFFIX=false
 VERSION=0.0.1
 
-GOTAG?=1.26.0
 MAKEFILES_VERSION=10.6.0
+
+GOTAG?=1.26.0
+CLIENT_GEN_VERSION?=v0.35.1
 
 GO_BUILD_FLAGS?=-mod=vendor -a ./...
 .DEFAULT_GOAL:=default
@@ -31,8 +33,26 @@ include build/make/mocks.mk
 include build/make/digital-signature.mk
 include build/make/k8s-controller.mk
 
+CLIENT_GEN=$(UTILITY_BIN_PATH)/client-gen
 
 default: compile
+
+##@ Codegen
+.PHONY: client-gen
+client-gen: ${CLIENT_GEN} ## Download client-gen locally if necessary.
+
+${CLIENT_GEN}: $(UTILITY_BIN_PATH)
+	$(call go-get-tool,$(CLIENT_GEN),k8s.io/code-generator/cmd/client-gen@$(CLIENT_GEN_VERSION))
+
+.PHONY: generate-client
+generate-client: ${CLIENT_GEN} ## Generate client code from API definitions.
+	@echo "Generating client..."
+	@$(CLIENT_GEN) -v 5 \
+		--output-dir "./" \
+		--output-pkg "${PROJECT_NAME}" \
+		--clientset-name "client" \
+		--input "api/v1" \
+		--input-base "${CURDIR}"
 
 # Override make target to use k8s-blueprint-lib as label
 .PHONY: crd-add-labels

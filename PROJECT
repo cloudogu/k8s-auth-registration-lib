@@ -13,7 +13,7 @@ resources:
     crdVersion: v1
     namespaced: true
   domain: cloudogu.com
-  group: auth
+  group: k8s
   kind: AuthRegistration
   path: github.com/cloudogu/k8s-auth-registration-lib/api/v1
   version: v1
