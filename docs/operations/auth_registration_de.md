@@ -44,7 +44,7 @@ kubectl -n ecosystem get ar bluespice-auth -o jsonpath='{range .status.condition
 3. Verwendetes Secret pruefen:
 ```bash
 SECRET_NAME=$(kubectl -n ecosystem get ar bluespice-auth -o jsonpath='{.status.resolvedSecretRef}')
-kubectl -n demo get secret "${SECRET_NAME}" -o yaml
+kubectl -n ecosystem get secret "${SECRET_NAME}" -o yaml
 ```
 
 ## Spec-Felder
