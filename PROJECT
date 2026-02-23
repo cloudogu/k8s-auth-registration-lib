@@ -8,4 +8,13 @@ layout:
 - go.kubebuilder.io/v4
 projectName: k8s-auth-registration-lib
 repo: github.com/cloudogu/k8s-auth-registration-lib
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  domain: cloudogu.com
+  group: auth
+  kind: AuthRegistration
+  path: github.com/cloudogu/k8s-auth-registration-lib/api/v1
+  version: v1
 version: "3"
