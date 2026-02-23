@@ -14,10 +14,37 @@ spec:
     kind: AuthRegistration
     listKind: AuthRegistrationList
     plural: authregistrations
+    shortNames:
+      - ar
     singular: authregistration
   scope: Namespaced
   versions:
-    - name: v1
+    - additionalPrinterColumns:
+        - description: Requested auth protocol
+          jsonPath: .spec.protocol
+          name: Protocol
+          type: string
+        - description: Registered consumer/service name
+          jsonPath: .spec.consumer
+          name: Consumer
+          type: string
+        - description: Effective Secret used for credentials
+          jsonPath: .status.resolvedSecretRef
+          name: Secret
+          type: string
+        - description: Whether credentials were published to a Secret
+          jsonPath: .status.conditions[?(@.type == 'CredentialsPublished')].status
+          name: CredsPublished
+          type: string
+        - description: Whether the registration has been completed
+          jsonPath: .status.conditions[?(@.type == 'Completed')].status
+          name: Completed
+          type: string
+        - description: The age of the resource
+          jsonPath: .metadata.creationTimestamp
+          name: Age
+          type: date
+      name: v1
       schema:
         openAPIV3Schema:
           description: AuthRegistration is the Schema for the authregistrations API
@@ -42,9 +69,36 @@ spec:
             spec:
               description: spec defines the desired state of AuthRegistration
               properties:
-                foo:
-                  description: foo is an example field of AuthRegistration. Edit authregistration_types.go to remove/update
+                consumer:
+                  description: Consumer is the identifier of the consuming application (service name).
+                  minLength: 1
                   type: string
+                logoutURL:
+                  description: LogoutURL defines an optional logout URL for single logout integrations.
+                  format: uri
+                  type: string
+                params:
+                  additionalProperties:
+                    type: string
+                  description: Params contains additional optional protocol-specific parameters.
+                  type: object
+                protocol:
+                  description: |-
+                    Protocol defines which authentication protocol should be used for registration.
+                    Supported values are CAS, OIDC and OAUTH.
+                  enum:
+                    - CAS
+                    - OIDC
+                    - OAUTH
+                  type: string
+                secretRef:
+                  description: |-
+                    SecretRef references an optional Secret name where generated credentials should be stored.
+                    If this field is omitted, the controller creates and manages a Secret automatically.
+                  type: string
+              required:
+                - consumer
+                - protocol
               type: object
             status:
               description: status defines the observed state of AuthRegistration
@@ -52,14 +106,7 @@ spec:
                 conditions:
                   description: |-
                     conditions represent the current state of the AuthRegistration resource.
-                    Each condition has a unique type and reflects the status of a specific aspect of the resource.
-
-                    Standard condition types include:
-                    - "Available": the resource is fully functional
-                    - "Progressing": the resource is being created or updated
-                    - "Degraded": the resource failed to reach or maintain its desired state
-
-                    The status of each condition is one of True, False, or Unknown.
+                    Each condition has a unique type and reflects a specific state transition.
                   items:
                     description: Condition contains details for one aspect of the current state of this API Resource.
                     properties:
@@ -117,6 +164,11 @@ spec:
                   x-kubernetes-list-map-keys:
                     - type
                   x-kubernetes-list-type: map
+                resolvedSecretRef:
+                  description: |-
+                    ResolvedSecretRef is the effective Secret name used to store credentials.
+                    It points either to spec.secretRef or to a controller-generated Secret when spec.secretRef is not set.
+                  type: string
               type: object
           required:
             - spec

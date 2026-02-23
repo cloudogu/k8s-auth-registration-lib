@@ -11,44 +11,75 @@ import (
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
+const (
+	// ConditionCompleted indicates that the registration process has finished.
+	ConditionCompleted = "Completed"
+	// ConditionCredentialsPublished indicates whether generated credentials were written to a Secret.
+	ConditionCredentialsPublished = "CredentialsPublished"
+)
+
+// AuthProtocol is the protocol used for the registration.
+type AuthProtocol string
+
+const (
+	AuthProtocolCAS   AuthProtocol = "CAS"
+	AuthProtocolOIDC  AuthProtocol = "OIDC"
+	AuthProtocolOAuth AuthProtocol = "OAUTH"
+)
+
 // AuthRegistrationSpec defines the desired state of AuthRegistration
 type AuthRegistrationSpec struct {
-	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
+	// Protocol defines which authentication protocol should be used for registration.
+	// Supported values are CAS, OIDC and OAUTH.
+	// +kubebuilder:validation:Enum=CAS;OIDC;OAUTH
+	Protocol AuthProtocol `json:"protocol"`
 
-	// foo is an example field of AuthRegistration. Edit authregistration_types.go to remove/update
+	// Consumer is the identifier of the consuming application (service name).
+	// +kubebuilder:validation:MinLength=1
+	Consumer string `json:"consumer"`
+
+	// SecretRef references an optional Secret name where generated credentials should be stored.
+	// If this field is omitted, the controller creates and manages a Secret automatically.
 	// +optional
-	Foo *string `json:"foo,omitempty"`
+	SecretRef *string `json:"secretRef,omitempty"`
+
+	// LogoutURL defines an optional logout URL for single logout integrations.
+	// +kubebuilder:validation:Format=uri
+	// +optional
+	LogoutURL *string `json:"logoutURL,omitempty"`
+
+	// Params contains additional optional protocol-specific parameters.
+	// +optional
+	Params map[string]string `json:"params,omitempty"`
 }
 
 // AuthRegistrationStatus defines the observed state of AuthRegistration.
 type AuthRegistrationStatus struct {
-	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-	// Important: Run "make" to regenerate code after modifying this file
-
-	// For Kubernetes API conventions, see:
-	// https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
+	// ResolvedSecretRef is the effective Secret name used to store credentials.
+	// It points either to spec.secretRef or to a controller-generated Secret when spec.secretRef is not set.
+	// +optional
+	ResolvedSecretRef string `json:"resolvedSecretRef,omitempty"`
 
 	// conditions represent the current state of the AuthRegistration resource.
-	// Each condition has a unique type and reflects the status of a specific aspect of the resource.
-	//
-	// Standard condition types include:
-	// - "Available": the resource is fully functional
-	// - "Progressing": the resource is being created or updated
-	// - "Degraded": the resource failed to reach or maintain its desired state
-	//
-	// The status of each condition is one of True, False, or Unknown.
+	// Each condition has a unique type and reflects a specific state transition.
+	// +patchMergeKey=type
+	// +patchStrategy=merge
 	// +listType=map
 	// +listMapKey=type
 	// +optional
-	Conditions []metav1.Condition `json:"conditions,omitempty"`
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 }
 
 // +genclient
 // +kubebuilder:object:root=true
+// +kubebuilder:resource:shortName=ar
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Protocol",type="string",JSONPath=".spec.protocol",description="Requested auth protocol"
+// +kubebuilder:printcolumn:name="Consumer",type="string",JSONPath=".spec.consumer",description="Registered consumer/service name"
+// +kubebuilder:printcolumn:name="Secret",type="string",JSONPath=".status.resolvedSecretRef",description="Effective Secret used for credentials"
+// +kubebuilder:printcolumn:name="CredsPublished",type="string",JSONPath=".status.conditions[?(@.type == 'CredentialsPublished')].status",description="Whether credentials were published to a Secret"
+// +kubebuilder:printcolumn:name="Completed",type="string",JSONPath=".status.conditions[?(@.type == 'Completed')].status",description="Whether the registration has been completed"
+// +kubebuilder:printcolumn:name="Age",type="date",JSONPath=".metadata.creationTimestamp",description="The age of the resource"
 
 // AuthRegistration is the Schema for the authregistrations API
 type AuthRegistration struct {
