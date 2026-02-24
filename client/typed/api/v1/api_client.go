@@ -3,10 +3,10 @@
 package v1
 
 import (
-	apiv1 "k8s-auth-registration-lib/api/v1"
-	scheme "k8s-auth-registration-lib/client/scheme"
 	http "net/http"
 
+	apiv1 "github.com/cloudogu/k8s-auth-registration-lib/api/v1"
+	scheme "github.com/cloudogu/k8s-auth-registration-lib/client/scheme"
 	rest "k8s.io/client-go/rest"
 )
 

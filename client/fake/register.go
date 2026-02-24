@@ -3,8 +3,7 @@
 package fake
 
 import (
-	apiv1 "k8s-auth-registration-lib/api/v1"
-
+	apiv1 "github.com/cloudogu/k8s-auth-registration-lib/api/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	runtime "k8s.io/apimachinery/pkg/runtime"
 	schema "k8s.io/apimachinery/pkg/runtime/schema"

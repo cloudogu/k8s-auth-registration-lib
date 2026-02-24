@@ -3,10 +3,9 @@
 package fake
 
 import (
-	clientset "k8s-auth-registration-lib/client"
-	apiv1 "k8s-auth-registration-lib/client/typed/api/v1"
-	fakeapiv1 "k8s-auth-registration-lib/client/typed/api/v1/fake"
-
+	clientset "github.com/cloudogu/k8s-auth-registration-lib/client"
+	apiv1 "github.com/cloudogu/k8s-auth-registration-lib/client/typed/api/v1"
+	fakeapiv1 "github.com/cloudogu/k8s-auth-registration-lib/client/typed/api/v1/fake"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/watch"

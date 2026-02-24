@@ -4,9 +4,9 @@ package client
 
 import (
 	fmt "fmt"
-	apiv1 "k8s-auth-registration-lib/client/typed/api/v1"
 	http "net/http"
 
+	apiv1 "github.com/cloudogu/k8s-auth-registration-lib/client/typed/api/v1"
 	discovery "k8s.io/client-go/discovery"
 	rest "k8s.io/client-go/rest"
 	flowcontrol "k8s.io/client-go/util/flowcontrol"

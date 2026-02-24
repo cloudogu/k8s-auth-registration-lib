@@ -3,9 +3,8 @@
 package fake
 
 import (
-	v1 "k8s-auth-registration-lib/api/v1"
-	apiv1 "k8s-auth-registration-lib/client/typed/api/v1"
-
+	v1 "github.com/cloudogu/k8s-auth-registration-lib/api/v1"
+	apiv1 "github.com/cloudogu/k8s-auth-registration-lib/client/typed/api/v1"
 	gentype "k8s.io/client-go/gentype"
 )
 

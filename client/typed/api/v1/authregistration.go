@@ -4,9 +4,9 @@ package v1
 
 import (
 	context "context"
-	apiv1 "k8s-auth-registration-lib/api/v1"
-	scheme "k8s-auth-registration-lib/client/scheme"
 
+	apiv1 "github.com/cloudogu/k8s-auth-registration-lib/api/v1"
+	scheme "github.com/cloudogu/k8s-auth-registration-lib/client/scheme"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	types "k8s.io/apimachinery/pkg/types"
 	watch "k8s.io/apimachinery/pkg/watch"
