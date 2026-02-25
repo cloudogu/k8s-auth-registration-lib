@@ -56,6 +56,12 @@ generate-client: ${CLIENT_GEN} ## Generate client code from API definitions.
 		--input "api/v1" \
 		--input-base "${CURDIR}"
 
+.PHONY: generate-crd-api
+generate-crd-api: ## Regenerate DeepCopy code, typed client and CRD manifests.
+	@$(MAKE) generate-deepcopy
+	@$(MAKE) generate-client
+	@$(MAKE) manifests
+
 # Override make target to use k8s-blueprint-lib as label
 .PHONY: crd-add-labels
 crd-add-labels: $(BINARY_YQ)

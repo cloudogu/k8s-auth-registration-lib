@@ -4,7 +4,7 @@
 
 For changes in `api/v1/*` (for example a new field in `Spec` or `Status`), follow this workflow:
 
-- `docs/development/crd_changes_en.md`
+- [CRD/API Changes](./crd_changes_en.md)
 
 ## Important Directories
 
