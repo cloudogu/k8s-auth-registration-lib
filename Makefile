@@ -2,7 +2,7 @@
 PROJECT_NAME=k8s-auth-registration-lib
 ARTIFACT_ID=k8s-auth-registration-crd
 APPEND_CRD_SUFFIX=false
-VERSION=0.0.1
+VERSION=0.1.0
 
 MAKEFILES_VERSION=10.6.0
 
