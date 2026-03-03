@@ -95,6 +95,9 @@ spec:
                   description: |-
                     SecretRef references an optional Secret name where generated credentials should be stored.
                     If this field is omitted, the controller creates and manages a Secret automatically.
+                  maxLength: 253
+                  minLength: 1
+                  pattern: ^[a-z0-9]([-a-z0-9]*[a-z0-9])?([.][a-z0-9]([-a-z0-9]*[a-z0-9])?)*$
                   type: string
               required:
                 - consumer
