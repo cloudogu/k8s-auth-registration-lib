@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [v1.0.0] - 2026-04-10
+### Added
+- official v1.0.0 release
+
 ## [v0.1.1] - 2026-03-03
 ### Added
 - [#3] add validation for `secretRef`
